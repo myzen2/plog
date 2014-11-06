@@ -1,17 +1,12 @@
 require 'sinatra'
 
-get '/formulaire' do
+get '/log' do
+	prénom = ''
+	nom = ''
+	log = ''
   erb :formulaire
-end
-
-require 'sinatra'
 
 get '/about' do
 	erb :about
-end
 
-require 'sinatra'
-
-get '/index' do
-	erb :index
 end
