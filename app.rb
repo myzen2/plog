@@ -22,6 +22,7 @@ end
 #get '/about' do
 #  erb :about
 #end
+
 # Saisir une nouvelle tâche
 get '/task/new' do
   erb :new
@@ -37,10 +38,47 @@ post '/task/create' do
     redirect '/tasks'
   end
 end
+
+
 # Afficher une tâche
 get '/task/:id' do
   @task = Task.get(params[:id])
   erb :task
+end
+
+# Afficher toutes les tâches
+get '/tasks' do
+  @tasks = Task.all
+  erb :index
+end
+# Modifier une tâche existante
+get '/task/:id/edit' do
+  @task = Task.get(params[:id])
+  erb :edit
+end
+
+# Mettre à jour une tâche
+put '/task/:id' do
+  task = Task.get(params[:id])
+  task.completed_at = params[:completed] ? Time.now : nil
+  task.name = (params[:name])
+  if task.save
+    status 201
+    redirect '/task/' + task.id.to_s
+  else
+    status 412
+    redirect '/tasks'
+  end
+end
+# Confirmer la suppression
+get '/task/:id/delete' do
+  @task = Task.get(params[:id])
+  erb :delete
+end
+# Supprimer une tâche
+delete '/task/:id' do
+  Task.get(params[:id]).destroy
+  redirect '/tasks'  
 end
 
 DataMapper.auto_upgrade!

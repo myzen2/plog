@@ -1,0 +1,6 @@
+<h2><%= @task.name %><h2>
+<h3>Est-ce que vous souhaitez réellement supprimer cette tâche ?</h3>
+<form action="/task/<%= @task.id %>" method="post">
+  <input type="hidden" name="_method" value="delete" />
+  <input type="submit" value="Supprimer"> ou <a href="/tasks">Annuler</a>
+</form>
