@@ -22,10 +22,7 @@ end
 #get '/about' do
 #  erb :about
 #end
-# Saisir une nouvelle tâche
-get '/task/new' do
-  erb :new
-end
+
 # Afficher une tâche
 get '/task/:id' do
   @task = Task.get(params[:id])

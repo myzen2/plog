@@ -6,8 +6,9 @@ gem 'sinatra'
 gem 'thin'
 gem 'rerun'
 gem 'dm-sqlite-adapter'
-gem 'data_mapper'
-group :development do
-  gem 'pry'
-end
-
+gem 'dm-core'
+gem 'sqlite3'
+gem 'activerecord'
+gem 'sinatra-activerecord'
+gem 'dm-migrations' 
+gem 'haml'

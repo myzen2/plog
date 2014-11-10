@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'sinatra'
-require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
 
@@ -12,24 +11,6 @@ class Task
   property :id, Serial
   property :name, String
   property :completed_at, DateTime
-end
-
-
-get '/' do
-  "I did it my way !"
-end
-
-#get '/about' do
-#  erb :about
-#end
-# Saisir une nouvelle tâche
-get '/task/new' do
-  erb :new
-end
-# Afficher une tâche
-get '/task/:id' do
-  @task = Task.get(params[:id])
-  erb :task
 end
 
 DataMapper.auto_upgrade!
