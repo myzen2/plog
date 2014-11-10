@@ -26,6 +26,17 @@ end
 get '/task/new' do
   erb :new
 end
+# Créer une nouvelle tâche
+post '/task/create' do
+  task = Task.new(:name => params[:name])
+  if task.save
+    status 201
+    redirect '/task/' + task.id.to_s
+  else
+    status 412
+    redirect '/tasks'
+  end
+end
 # Afficher une tâche
 get '/task/:id' do
   @task = Task.get(params[:id])
