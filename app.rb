@@ -19,14 +19,15 @@ get '/' do
   "I did it my way !"
 end
 
-#get '/about' do
-#  erb :about
-#end
+get '/about' do
+  erb :about
+end
 
 # Saisir une nouvelle tâche
 get '/task/new' do
   erb :new
 end
+
 # Créer une nouvelle tâche
 post '/task/create' do
   task = Task.new(:name => params[:name])
@@ -39,7 +40,6 @@ post '/task/create' do
   end
 end
 
-
 # Afficher une tâche
 get '/task/:id' do
   @task = Task.get(params[:id])
@@ -47,10 +47,11 @@ get '/task/:id' do
 end
 
 # Afficher toutes les tâches
-get '/tasks' do
+get '/index' do
   @tasks = Task.all
   erb :index
 end
+
 # Modifier une tâche existante
 get '/task/:id/edit' do
   @task = Task.get(params[:id])
@@ -70,15 +71,17 @@ put '/task/:id' do
     redirect '/tasks'
   end
 end
+
 # Confirmer la suppression
 get '/task/:id/delete' do
   @task = Task.get(params[:id])
   erb :delete
 end
+
 # Supprimer une tâche
 delete '/task/:id' do
   Task.get(params[:id]).destroy
-  redirect '/tasks'  
+  redirect '/index'  
 end
 
 DataMapper.auto_upgrade!

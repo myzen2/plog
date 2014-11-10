@@ -10,3 +10,9 @@
 <% else %>
 <p>Aucune tâche enregistrée !</p>
 <% end %>
+
+<h2>Créer une tâche</h2>
+<form action="/task/create" method="POST">
+  <input type="text" name="name" id="name">
+  <input type="submit" value="Ajouter la tâche"/>
+</form>
