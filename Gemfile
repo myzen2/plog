@@ -12,3 +12,5 @@ gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'dm-migrations' 
 gem 'haml'
+gem 'pry'
+

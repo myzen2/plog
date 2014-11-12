@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'dm-core'
 require 'dm-migrations'
+require 'pry'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/development.db")
 
@@ -28,7 +29,7 @@ end
 # Créer une nouvelle tâche
 post '/task/create' do
   task = Task.new(:name => params[:name])
-  user = Task.new(:name => params[:User])
+
   if task.save
     status 201
     redirect '/'
@@ -37,6 +38,8 @@ post '/task/create' do
     redirect '/'
   end
 end
+
+
 
 # Modifier une tâche existante
 get '/task/:id' do
@@ -73,7 +76,11 @@ end
 # Afficher toutes les tâches
 get '/' do
   @tasks = Task.all
-  erb :index
+    erb :index
+end
+
+get '/about' do
+  erb :about
 end
 
 DataMapper.auto_upgrade!
