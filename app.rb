@@ -1,16 +1,9 @@
 require 'sinatra'
-require 'sinatra/reloader'
 require 'data_mapper'
 require 'pry'
 require 'rubygems'
 require 'better_errors'
 
-
-# Configure BetterErrors for enhancing error messages
-configure :development do
-use BetterErrors::Middleware
-BetterErrors.application_root = __dir__
-end
 
 
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/plog.db")
@@ -21,6 +14,7 @@ include DataMapper::Resource
 property :id, Serial
 property :author, Text
 property :message, Text
+property :created_at, DateTime
 end
 
 
@@ -28,14 +22,14 @@ end
 DataMapper.finalize
 
 get '/nouveau' do
-  @logs = Log.all(:order => [ :id.desc], :limit => 10)
+  @logs = Log.all(:order => [ :id.desc], :limit => 20)
   erb :nouveau
 end
 
 post '/nouveau' do
   @log = Log.create(
   :author => params[:author],
-  :message => params[:message],)
+  :message => params[:message], :created_at => Time.now)
 redirect '/nouveau'
 end
 
@@ -73,11 +67,21 @@ end
 post '/modify/:id' do
   log = Log.first(:id => params[:id])
   log.update(
-  :message => params[:message],)
+  :message => params[:message], :created_at => Time.now) 
   redirect '/nouveau'
 end
 
+# Page visiteur
+get '/visiteur' do
+  @logs = Log.all(:order => [ :id.desc], :limit => 10)
+  erb :visiteur
+end
+
 #identification
+set :username, 'emma'
+set :password, 'naouelle'
+set :token, 'emmanaouelle'
+
 get '/identification' do
   erb :identification
 end
@@ -98,7 +102,5 @@ get '/logout' do
   response.set_cookie(settings.username, false) ;
   redirect '/'
 end
-
-
 
 DataMapper.auto_upgrade!
