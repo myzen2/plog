@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="page-visiteur">
+        
+        <div class="row">
+             <div class="col-md-6-md-offset-4">
+                <div class="titre-visiteur">
+                <h1>Nos Logs</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-4">
+                 <% @logs.each do |log| %>
+                <h3><%= log.author %></h3>
+                 <p><%= log.message %></p>
+                 <% end %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-4">
+                <div class="retour-accueil">
+                <a href="/acceuil">Retourner à l'accueil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

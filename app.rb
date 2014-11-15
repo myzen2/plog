@@ -1,86 +1,104 @@
-require 'rubygems'
 require 'sinatra'
-require 'dm-core'
-require 'dm-migrations'
+require 'sinatra/reloader'
+require 'data_mapper'
 require 'pry'
+require 'rubygems'
+require 'better_errors'
 
-DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/development.db")
 
-class Task
-  include DataMapper::Resource
-  property :id, Serial
-  property :name, String
-  property :User, String
-  property :completed_at, DateTime
-
- def completed?
-    true if completed_at
-  end
-
-  def self.completed
-    all(:completed_at.not => nil)
-  end
-  def link
-    "<a href=\"task/#{self.id}\">#{self.name}</a>"
-  end
-
+# Configure BetterErrors for enhancing error messages
+configure :development do
+use BetterErrors::Middleware
+BetterErrors.application_root = __dir__
 end
 
-# Créer une nouvelle tâche
-post '/task/create' do
-  task = Task.new(:name => params[:name])
 
-  if task.save
-    status 201
-    redirect '/'
-  else
-    status 412
-    redirect '/'
-  end
+DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/plog.db")
+
+
+class Log
+include DataMapper::Resource
+property :id, Serial
+property :author, Text
+property :message, Text
 end
 
 
 
-# Modifier une tâche existante
-get '/task/:id' do
-  @task = Task.get(params[:id])
-  erb :edit
+DataMapper.finalize
+
+get '/nouveau' do
+  @logs = Log.all(:order => [ :id.desc], :limit => 10)
+  erb :nouveau
 end
 
-# Mettre à jour une tâche
-put '/task/:id' do
-  task = Task.get(params[:id])
-  task.completed_at = params[:completed] ? Time.now : nil
-  task.name = (params[:name])
-  if task.save
-    status 201
-    redirect '/'
-  else
-    status 412
-    redirect '/'
-  end
+post '/nouveau' do
+  @log = Log.create(
+  :author => params[:author],
+  :message => params[:message],)
+redirect '/nouveau'
 end
 
-# Confirmer la suppression
-get '/task/:id/delete' do
-  @task = Task.get(params[:id])
+# page d'accueil
+get '/accueil' do
+  erb :accueil
+end
+
+get '/' do
+  redirect '/accueil'
+end
+
+#supprimer un message
+get '/delete/:id' do
+  @log = Log.first(:id => params[:id])
   erb :delete
 end
 
-# Supprimer une tâche
-delete '/task/:id' do
-  Task.get(params[:id]).destroy
-  redirect '/'  
+delete '/delete/:id' do
+  if params.has_key?("ok")
+  log = Log.first(:id => params[:id])
+  log.destroy
+  redirect '/nouveau'
+else
+  redirect '/nouveau'
+  end
 end
 
-# Afficher toutes les tâches
-get '/' do
-  @tasks = Task.all
-    erb :index
+#Modifier un message
+get '/modify/:id' do
+  @log = Log.first(:id => params[:id])
+  erb :modify
 end
 
-get '/about' do
-  erb :about
+post '/modify/:id' do
+  log = Log.first(:id => params[:id])
+  log.update(
+  :message => params[:message],)
+  redirect '/nouveau'
 end
+
+#identification
+get '/identification' do
+  erb :identification
+end
+
+post '/identification' do
+  if params['username'] == settings.username && params['password'] == settings.password
+  response.set_cookie(settings.username,settings.token)
+  redirect '/nouveau'
+  elsif params['username'] != settings.username && params['password'] != settings.password
+  "code utilisateur ou mot de passe incorrect"
+  elsif redirect '/identification'
+  else
+  redirect '/nouveau'
+  end
+end
+
+get '/logout' do
+  response.set_cookie(settings.username, false) ;
+  redirect '/'
+end
+
+
 
 DataMapper.auto_upgrade!

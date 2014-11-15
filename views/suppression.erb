@@ -1,0 +1,8 @@
+<p>Supprimer le message</p>
+<blockquote><P><%= @log.message %></p></blockquote>
+
+<form action="/delete/<%= @log.id %>" method="post">
+  <input name="_method" type="hidden" value="delete" />
+  <button type="submit" class="btn btn-primary" name="ok">Ok</button>
+  <button type="submit" class="btn" name="cancel">Annuler</button>
+</form>
