@@ -3,7 +3,7 @@ body {
 }
 p {
     font-size: 16px;
-    color: #333331;
+    color: #522261;
 }
 
 /*--------------------------------------
@@ -15,7 +15,7 @@ p {
     text-align: center;
 }
 .nouveau h1 {
-    color: #34495E;
+    color: #35695E;
     padding-top: 30px;
     font-size: 100px;
 }
@@ -53,4 +53,22 @@ p {
 }
 label {
     width: 130px;
+}
+
+/*------------------------------------
+            Page accueil
+--------------------------------------*/
+
+.accueil {
+    background-color: #FFFFFF;
+    text-align: center;
+}
+.accueil h1 {
+    color: #35695E;
+    padding-top: 30px;
+    font-size: 100px;
+}
+.description {
+    font-size: 18px;
+    padding-bottom: 40px;
 }
