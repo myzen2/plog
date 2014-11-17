@@ -12,23 +12,21 @@ DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/plog.db")
 class Log
 include DataMapper::Resource
 property :id, Serial
-property :author, Text
+property :name, String
 property :message, Text
 property :created_at, DateTime
 end
 
-
-
 DataMapper.finalize
 
 get '/nouveau' do
-  @logs = Log.all(:order => [ :id.desc], :limit => 20)
+  @logs = Log.all(:order => [:id.desc], :limit => 20)
   erb :nouveau
 end
 
 post '/nouveau' do
   @log = Log.create(
-  :author => params[:author],
+  :name => params[:name],
   :message => params[:message], :created_at => Time.now)
 redirect '/nouveau'
 end
@@ -45,23 +43,23 @@ end
 #supprimer un message
 get '/delete/:id' do
   @log = Log.first(:id => params[:id])
-  erb :delete
+  erb :suppression
 end
 
 delete '/delete/:id' do
   if params.has_key?("ok")
-  log = Log.first(:id => params[:id])
-  log.destroy
-  redirect '/nouveau'
-else
-  redirect '/nouveau'
+    log = Log.first(:id => params[:id])
+    log.destroy
+    redirect '/nouveau'
+  else
+    redirect '/nouveau'
   end
 end
 
 #Modifier un message
 get '/modify/:id' do
   @log = Log.first(:id => params[:id])
-  erb :modify
+  erb :modification
 end
 
 post '/modify/:id' do
@@ -74,7 +72,7 @@ end
 # Page visiteur
 get '/visiteur' do
   @logs = Log.all(:order => [ :id.desc], :limit => 10)
-  erb :visiteur
+  erb :visiteurs
 end
 
 #identification
@@ -88,7 +86,6 @@ end
 
 post '/identification' do
   if params['username'] == settings.username && params['password'] == settings.password
-  response.set_cookie(settings.username,settings.token)
   redirect '/nouveau'
   elsif params['username'] != settings.username && params['password'] != settings.password
   "code utilisateur ou mot de passe incorrect"
@@ -98,9 +95,5 @@ post '/identification' do
   end
 end
 
-get '/logout' do
-  response.set_cookie(settings.username, false) ;
-  redirect '/'
-end
 
-DataMapper.auto_upgrade!
+Log.auto_upgrade!

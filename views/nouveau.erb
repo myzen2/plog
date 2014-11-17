@@ -1,16 +1,16 @@
 Bienvenue !
 <form action="/nouveau" class="form-inline" method="post">
-    <label for="choix">Votre prénom :</label>
-    <input type="text" placeholder="insérer votre log" name="message" required="required">
-    <select name="author" id="choix">
+    <label for="choix">Votre prénom :</label>    
+    <select name="name" id="choix">
         <option value="Mehdi">Mehdi</option>
         <option value="Emmanuelle">Emmanuelle</option>
     </select>
+    <input type="text" placeholder="insérer votre log" name="message" required="required">
     <button type="submit" class="btn">Envoyer</button>
 </form>
 
 <% @logs.each do |log| %>
-    <h3><%= log.author %></h3>
+    <h3><%= log.name %></h3>
     <p><%= log.message %></p>
 <span>
     <a href="/delete/<%= log[:id] %>" class="btn-danger">Supprimer</a>
